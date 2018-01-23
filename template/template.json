@@ -1,0 +1,408 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_helloworld_name": {
+            "defaultValue": "helloworld",
+            "type": "String"
+        },
+        "networkInterfaces_helloworld716_name": {
+            "defaultValue": "helloworld716",
+            "type": "String"
+        },
+        "publicIPAddresses_helloworld_ip_name": {
+            "defaultValue": "helloworld-ip",
+            "type": "String"
+        },
+        "virtualNetworks_helloworld_vnet_name": {
+            "defaultValue": "helloworld-vnet",
+            "type": "String"
+        },
+        "storageAccounts_helloworlddiag185_name": {
+            "defaultValue": "helloworlddiag185",
+            "type": "String"
+        },
+        "networkSecurityGroups_helloworld_nsg_name": {
+            "defaultValue": "helloworld-nsg",
+            "type": "String"
+        },
+        "subnets_default_name": {
+            "defaultValue": "default",
+            "type": "String"
+        },
+        "securityRules_default_allow_ssh_name": {
+            "defaultValue": "default-allow-ssh",
+            "type": "String"
+        },
+        "virtualMachines_helloworld_id": {
+            "defaultValue": "/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Compute/disks/helloworld_OsDisk_1_0f1c2b0aa1ea41b1a6cbef7a535ac4e2",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Compute/virtualMachines/helloworld'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_helloworld_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.2",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_helloworld_name'),'_OsDisk_1_0f1c2b0aa1ea41b1a6cbef7a535ac4e2')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('virtualMachines_helloworld_id')]"
+                        },
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_helloworld_name')]",
+                    "adminUsername": "davidwg",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_helloworld716_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https', '://', parameters('storageAccounts_helloworlddiag185_name'), '.blob.core.windows.net', '/')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_helloworld716_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_helloworlddiag185_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/networkInterfaces/helloworld716'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_helloworld716_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "9994f832-81ba-43b4-a7f5-e2243f803df3",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "etag": "W/\"d35eae73-6097-47f5-9c1c-173fb71b8183\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_helloworld_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_helloworld_vnet_name'), parameters('subnets_default_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [],
+                    "appliedDnsServers": [],
+                    "internalDomainNameSuffix": "jgykz4zccqpeznwdpnmtj2myef.bx.internal.cloudapp.net"
+                },
+                "macAddress": "00-0D-3A-1B-32-C8",
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_helloworld_nsg_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_helloworld_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_helloworld_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_helloworld_vnet_name'), parameters('subnets_default_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_helloworld_nsg_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_helloworld_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/networkSecurityGroups/helloworld-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_helloworld_nsg_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "b9f1cfc9-e302-4e66-ab3e-c670c487b15f",
+                "securityRules": [
+                    {
+                        "name": "default-allow-ssh",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ],
+                "defaultSecurityRules": [
+                    {
+                        "name": "AllowVnetInBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowAzureLoadBalancerInBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from azure load balancer",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureLoadBalancer",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all inbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowVnetOutBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowInternetOutBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to Internet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "Internet",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllOutBound",
+                        "etag": "W/\"998f3fcb-0cd2-4d16-ad1e-3e23ac04c0b2\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all outbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/publicIPAddresses/helloworld-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_helloworld_ip_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "dd6b5720-fe20-4fb6-a72e-722f08963d22",
+                "ipAddress": "52.226.71.39",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/virtualNetworks/helloworld-vnet'.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_helloworld_vnet_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "fbacb049-1422-4c1e-b6c3-7b5934f19825",
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/24"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "etag": "W/\"87cbb62f-3901-4f7e-b814-4e39f9dd90d3\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Storage/storageAccounts/helloworlddiag185'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_helloworlddiag185_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/networkSecurityGroups/helloworld-nsg/securityRules/default-allow-ssh'.",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('networkSecurityGroups_helloworld_nsg_name'), '/', parameters('securityRules_default_allow_ssh_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_helloworld_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/ebc10a88-3b0a-4de1-9401-29a1b4911715/resourceGroups/helloworld/providers/Microsoft.Network/virtualNetworks/helloworld-vnet/subnets/default'.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('virtualNetworks_helloworld_vnet_name'), '/', parameters('subnets_default_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.0.0.0/24"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_helloworld_vnet_name'))]"
+            ]
+        }
+    ]
+}
